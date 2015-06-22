@@ -2,6 +2,7 @@ package pgx
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"math"
 	"strconv"
@@ -158,6 +159,30 @@ func (n NullFloat32) Encode(w *WriteBuf, oid Oid) error {
 	return encodeFloat4(w, n.Float32)
 }
 
+func (f NullFloat32) MarshalJSON() ([]byte, error) {
+	if f.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(f.Float32); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (f *NullFloat32) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		f.Valid = false
+	} else if err := json.Unmarshal(data, &f.Float32); err != nil {
+		f.Valid = false
+
+		return err
+	} else {
+		f.Valid = true
+	}
+
+	return nil
+}
+
 // NullFloat64 represents an float8 that may be null. NullFloat64 implements the
 // Scanner and Encoder interfaces so it may be used both as an argument to
 // Query[Row] and a destination for Scan.
@@ -197,6 +222,30 @@ func (n NullFloat64) Encode(w *WriteBuf, oid Oid) error {
 	return encodeFloat8(w, n.Float64)
 }
 
+func (f NullFloat64) MarshalJSON() ([]byte, error) {
+	if f.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(f.Float64); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (f *NullFloat64) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		f.Valid = false
+	} else if err := json.Unmarshal(data, &f.Float64); err != nil {
+		f.Valid = false
+
+		return err
+	} else {
+		f.Valid = true
+	}
+
+	return nil
+}
+
 // NullString represents an string that may be null. NullString implements the
 // Scanner Encoder interfaces so it may be used both as an argument to
 // Query[Row] and a destination for Scan.
@@ -229,6 +278,30 @@ func (s NullString) Encode(w *WriteBuf, oid Oid) error {
 	}
 
 	return encodeText(w, s.String)
+}
+
+func (s NullString) MarshalJSON() ([]byte, error) {
+	if s.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(s.String); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (s *NullString) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		s.Valid = false
+	} else if err := json.Unmarshal(data, &s.String); err != nil {
+		s.Valid = false
+
+		return err
+	} else {
+		s.Valid = true
+	}
+
+	return nil
 }
 
 // NullInt16 represents an smallint that may be null. NullInt16 implements the
@@ -270,6 +343,30 @@ func (n NullInt16) Encode(w *WriteBuf, oid Oid) error {
 	return encodeInt2(w, n.Int16)
 }
 
+func (i NullInt16) MarshalJSON() ([]byte, error) {
+	if i.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(i.Int16); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (i *NullInt16) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		i.Valid = false
+	} else if err := json.Unmarshal(data, &i.Int16); err != nil {
+		i.Valid = false
+
+		return err
+	} else {
+		i.Valid = true
+	}
+
+	return nil
+}
+
 // NullInt32 represents an integer that may be null. NullInt32 implements the
 // Scanner and Encoder interfaces so it may be used both as an argument to
 // Query[Row] and a destination for Scan.
@@ -307,6 +404,30 @@ func (n NullInt32) Encode(w *WriteBuf, oid Oid) error {
 	}
 
 	return encodeInt4(w, n.Int32)
+}
+
+func (i NullInt32) MarshalJSON() ([]byte, error) {
+	if i.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(i.Int32); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (i *NullInt32) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		i.Valid = false
+	} else if err := json.Unmarshal(data, &i.Int32); err != nil {
+		i.Valid = false
+
+		return err
+	} else {
+		i.Valid = true
+	}
+
+	return nil
 }
 
 // NullInt64 represents an bigint that may be null. NullInt64 implements the
@@ -348,6 +469,30 @@ func (n NullInt64) Encode(w *WriteBuf, oid Oid) error {
 	return encodeInt8(w, n.Int64)
 }
 
+func (i NullInt64) MarshalJSON() ([]byte, error) {
+	if i.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(i.Int64); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (i *NullInt64) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		i.Valid = false
+	} else if err := json.Unmarshal(data, &i.Int64); err != nil {
+		i.Valid = false
+
+		return err
+	} else {
+		i.Valid = true
+	}
+
+	return nil
+}
+
 // NullBool represents an bool that may be null. NullBool implements the Scanner
 // and Encoder interfaces so it may be used both as an argument to Query[Row]
 // and a destination for Scan.
@@ -385,6 +530,30 @@ func (n NullBool) Encode(w *WriteBuf, oid Oid) error {
 	}
 
 	return encodeBool(w, n.Bool)
+}
+
+func (b NullBool) MarshalJSON() ([]byte, error) {
+	if b.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(b.Bool); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (b *NullBool) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		b.Valid = false
+	} else if err := json.Unmarshal(data, &b.Bool); err != nil {
+		b.Valid = false
+
+		return err
+	} else {
+		b.Valid = true
+	}
+
+	return nil
 }
 
 // NullTime represents an bigint that may be null. NullTime implements the
@@ -435,6 +604,30 @@ func (n NullTime) Encode(w *WriteBuf, oid Oid) error {
 	} else {
 		return encodeTimestamp(w, n.Time)
 	}
+}
+
+func (t NullTime) MarshalJSON() ([]byte, error) {
+	if t.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(t.Time); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (t *NullTime) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		t.Valid = false
+	} else if err := json.Unmarshal(data, &t.Time); err != nil {
+		t.Valid = false
+
+		return err
+	} else {
+		t.Valid = true
+	}
+
+	return nil
 }
 
 // Hstore represents an hstore column. It does not support a null column or null
@@ -568,6 +761,30 @@ func (h NullHstore) Encode(w *WriteBuf, oid Oid) error {
 	}
 	w.WriteInt32(int32(buf.Len()))
 	w.WriteBytes(buf.Bytes())
+	return nil
+}
+
+func (h NullHstore) MarshalJSON() ([]byte, error) {
+	if h.Valid == false {
+		return []byte("null"), nil
+	} else if d, err := json.Marshal(h.Hstore); err != nil {
+		return nil, err
+	} else {
+		return d, nil
+	}
+}
+
+func (h *NullHstore) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		h.Valid = false
+	} else if err := json.Unmarshal(data, &h.Hstore); err != nil {
+		h.Valid = false
+
+		return err
+	} else {
+		h.Valid = true
+	}
+
 	return nil
 }
 
